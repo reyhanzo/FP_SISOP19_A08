@@ -1,0 +1,103 @@
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
+#include <syslog.h>
+#include <string.h>
+#include <pthread.h>
+#include <time.h>
+
+pthread_t tid[1000];
+char b1[100], b2[100], b3[100], b4[100], b5[100], b6[100];
+
+void* make_time(void *arg)
+{
+        time_t waktu;
+        struct tm * ambilwaktu;
+
+        time (&waktu);
+        ambilwaktu = localtime(&waktu);
+
+         int temp =1;
+
+        int m = atoi(b1);
+        int j = atoi(b2);
+        int t = atoi(b3);
+        int b = atoi(b4);
+        int h = atoi (b5);
+
+        if ( 
+            ((m != waktu->tm_min) && strcmp(b1,"*")!=0) ||
+            ((j != waktu->tm_hour) && strcmp(b2,"*")!=0) ||
+            ((t != waktu->tm_mday) && strcmp(b3,"*")!=0) ||
+            ((b != waktu->tm_mon) && strcmp(b4,"*")!=0) ||
+            ((h != waktu->tm_wday) && strcmp(b5,"*")!=0)){
+
+                temp = 0;
+            }
+}
+
+void make_thread(char *)
+{
+  
+}
+
+void read_com()
+{
+    char fl;
+    char l[1000];
+    FILE * file;
+    int number = 0;
+    file = fopen("/home/reyhanzo/crontab.data","r");
+    fl = fgetc(file);
+    while(fscanf(file,"%s %s %s %s %s %s", b1, b2, b3, b4, b5, b6) != EOF)
+    {
+        l[number]=fl;
+        number++;
+        fl = fgetc(file);
+        printf("%s %s %s %s %s %s\n",b1, b2, b3, b4, b5, b6);
+    }
+
+
+    fclose(file);
+}
+
+int main() {
+  pid_t pid, sid;
+
+  pid = fork();
+
+  if (pid < 0) {
+    exit(EXIT_FAILURE);
+  }
+
+  if (pid > 0) {
+    exit(EXIT_SUCCESS);
+  }
+
+  umask(0);
+
+  sid = setsid();
+
+  if (sid < 0) {
+    exit(EXIT_FAILURE);
+  }
+
+  if ((chdir("/home/reyhanzo")) < 0) {
+    exit(EXIT_FAILURE);
+  }
+
+  close(STDIN_FILENO);
+  close(STDOUT_FILENO);
+  close(STDERR_FILENO);
+
+  while(1) {
+      
+    sleep(30);
+  }
+  
+  exit(EXIT_SUCCESS);
+}
